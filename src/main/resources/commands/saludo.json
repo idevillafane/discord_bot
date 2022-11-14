@@ -1,0 +1,12 @@
+{
+    "name": "saludo",
+    "description": "Pedile un saludo a la Chiqui",
+    "options": [
+        {
+            "name": "nombre",
+            "description": "Tu nombre",
+            "type": 3,
+            "required": false
+        }
+    ]
+}
