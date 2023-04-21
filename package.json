@@ -1,0 +1,21 @@
+{
+  "name": "discord",
+  "version": "1.0.0",
+  "description": "Desarrollo de bot para discord",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ignacio de Villafañe",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.9.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "oauth": "^0.10.0",
+    "redis": "^4.6.5",
+    "trello-node-api": "^0.0.9",
+    "url": "^0.11.0"
+  }
+}
