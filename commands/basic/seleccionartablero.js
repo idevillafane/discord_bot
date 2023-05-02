@@ -2,24 +2,20 @@ import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilde
 import TrelloNodeApi from 'trello-node-api';
 import dotenv from 'dotenv';
 import client from '../../redis.js';
-import http from 'http';
 dotenv.config();
 
 const trello = new TrelloNodeApi;
-
 trello.setApiKey(process.env.TRELLO_API_KEY);
+
 
 export default {
 
   data: new SlashCommandBuilder()
 
-    .setName('vertableros')
-    .setDescription('Ver todos los tableros.'),
-
+    .setName('seleccionartablero')
+    .setDescription('Seleccioná el tablero con el que vas a trabajar'),
 
   async execute(interaction) {
-
-	let listas;
 
 	// SE GUARDA EL USER ID DE DISCORD
 
@@ -55,41 +51,32 @@ export default {
 
 				trello.setOauthToken(oauthToken)
 
-				// REQUEST A TRELLO API
-
-				const res = await trello.member.searchBoards('me');
-
-				const tableros = res.map(obj => ( new StringSelectMenuOptionBuilder()
-					.setLabel(obj.name)
-					.setValue(obj.id)))
-
 				const select = new StringSelectMenuBuilder()
-					.setCustomId('listadetableros')
-					.setPlaceholder('¡Elegí un tablero!')
-					.addOptions(tableros);
+                .setCustomId('starter')
+                .setPlaceholder('Make a selection!')
+                .addOptions(
 
-				const row = new ActionRowBuilder().addComponents(select);
+                    
 
-				const response = await interaction.reply({
-					content: `Tenés ${tableros.length} tableros en Trello. Elegí con cuál querés trabajar.`,
-					components: [row]
-				});
+                    /*
+                    new StringSelectMenuOptionBuilder()
+                        .setLabel('Bulbasaur')
+                        .setDescription('The dual-type Grass/Poison Seed Pokémon.')
+                        .setValue('bulbasaur'),
+                    new StringSelectMenuOptionBuilder()
+                        .setLabel('Charmander')
+                        .setDescription('The Fire-type Lizard Pokémon.')
+                        .setValue('charmander'),
+                    new StringSelectMenuOptionBuilder()
+                        .setLabel('Squirtle')
+                        .setDescription('The Water-type Tiny Turtle Pokémon.')
+                        .setValue('squirtle'),
+                    */
+			    );
 
-				const collectorFilter = i => i.user.id === interaction.user.id;
+            const row = new ActionRowBuilder().addComponents(select);
 
-				
-
-				try {
-
-					const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60000 });
-
-					const verification = await confirmation.update({ content: `Elegiste el tablero con id: ${confirmation.values[0]}`, components: [] })
-
-					const hn = `https://api.trello.com/1/boards/${confirmation.values[0]}/lists?key=${process.env.TRELLO_API_KEY}&token=${oauthToken}`;
-
-				} catch (e) {
-					await response.update({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-				}
+            await interaction.reply({ content: 'Choose your starter!', components: [row] });
 
         } catch (error) {
 

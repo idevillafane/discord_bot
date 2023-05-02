@@ -1,25 +1,20 @@
-import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import TrelloNodeApi from 'trello-node-api';
 import dotenv from 'dotenv';
 import client from '../../redis.js';
-import http from 'http';
 dotenv.config();
 
 const trello = new TrelloNodeApi;
-
 trello.setApiKey(process.env.TRELLO_API_KEY);
 
 export default {
 
   data: new SlashCommandBuilder()
 
-    .setName('vertableros')
-    .setDescription('Ver todos los tableros.'),
-
+    .setName('creartarjeta')
+    .setDescription('Crea una tarjeta en una lista de un tablero'),
 
   async execute(interaction) {
-
-	let listas;
 
 	// SE GUARDA EL USER ID DE DISCORD
 
@@ -57,39 +52,41 @@ export default {
 
 				// REQUEST A TRELLO API
 
-				const res = await trello.member.searchBoards('me');
 
-				const tableros = res.map(obj => ( new StringSelectMenuOptionBuilder()
-					.setLabel(obj.name)
-					.setValue(obj.id)))
+				/*
+					PASOS PARA PODER POSTEAR UNA CARTA
+					1-. Se selecciona un tablero
+					2-. Con el ID del tablero se requestea a Trello para saber los IDs de las listas
+					3-. Se selecciona una lista
+					4-. Se llena campos: por ahora solamente NAME
+					
+				*/
 
-				const select = new StringSelectMenuBuilder()
-					.setCustomId('listadetableros')
-					.setPlaceholder('¡Elegí un tablero!')
-					.addOptions(tableros);
-
-				const row = new ActionRowBuilder().addComponents(select);
-
-				const response = await interaction.reply({
-					content: `Tenés ${tableros.length} tableros en Trello. Elegí con cuál querés trabajar.`,
-					components: [row]
-				});
-
-				const collectorFilter = i => i.user.id === interaction.user.id;
-
-				
-
-				try {
-
-					const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60000 });
-
-					const verification = await confirmation.update({ content: `Elegiste el tablero con id: ${confirmation.values[0]}`, components: [] })
-
-					const hn = `https://api.trello.com/1/boards/${confirmation.values[0]}/lists?key=${process.env.TRELLO_API_KEY}&token=${oauthToken}`;
-
-				} catch (e) {
-					await response.update({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-				}
+				/*
+					let data = {
+						name: 'CARD_NAME',
+						desc: 'Card description',
+						pos: 'top',
+						idList: 'LIST_ID', //REQUIRED
+						due: null,
+						dueComplete: false,
+						idMembers: ['MEMBER_ID', 'MEMBER_ID', 'MEMBER_ID'],
+						idLabels: ['LABEL_ID', 'LABEL_ID', 'LABEL_ID'],
+						urlSource: 'https://example.com',
+						fileSource: 'file',
+						idCardSource: 'CARD_ID',
+						keepFromSource: 'attachments,checklists,comments,due,labels,members,stickers'
+					};
+					let response;
+					try {
+						response = await Trello.card.create(data);
+					} catch (error) {
+						if (error) {
+							console.log('error ', error);
+						}
+					}
+					console.log('response', response);
+				*/
 
         } catch (error) {
 
