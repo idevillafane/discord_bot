@@ -2,7 +2,6 @@ import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilde
 import TrelloNodeApi from 'trello-node-api';
 import dotenv from 'dotenv';
 import client from '../../redis.js';
-import http from 'http';
 dotenv.config();
 
 const trello = new TrelloNodeApi;
@@ -13,13 +12,11 @@ export default {
 
   data: new SlashCommandBuilder()
 
-    .setName('vertableros')
-    .setDescription('Ver todos los tableros.'),
+    .setName('verlistas')
+    .setDescription('Ver todos las listas de un tablero'),
 
 
   async execute(interaction) {
-
-	let listas;
 
 	// SE GUARDA EL USER ID DE DISCORD
 
@@ -57,39 +54,13 @@ export default {
 
 				// REQUEST A TRELLO API
 
-				const res = await trello.member.searchBoards('me');
+				const res = await trello.board.searchLists('60ef6afdfc03e17dd9bc486d');
 
-				const tableros = res.map(obj => ( new StringSelectMenuOptionBuilder()
-					.setLabel(obj.name)
-					.setValue(obj.id)))
+				console.log(res)
 
-				const select = new StringSelectMenuBuilder()
-					.setCustomId('listadetableros')
-					.setPlaceholder('¡Elegí un tablero!')
-					.addOptions(tableros);
+				console.log('quedate sentado charlando')
 
-				const row = new ActionRowBuilder().addComponents(select);
-
-				const response = await interaction.reply({
-					content: `Tenés ${tableros.length} tableros en Trello. Elegí con cuál querés trabajar.`,
-					components: [row]
-				});
-
-				const collectorFilter = i => i.user.id === interaction.user.id;
-
-				
-
-				try {
-
-					const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60000 });
-
-					const verification = await confirmation.update({ content: `Elegiste el tablero con id: ${confirmation.values[0]}`, components: [] })
-
-					const hn = `https://api.trello.com/1/boards/${confirmation.values[0]}/lists?key=${process.env.TRELLO_API_KEY}&token=${oauthToken}`;
-
-				} catch (e) {
-					await response.update({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-				}
+				const respuesta = await interaction.reply('Algo para responder')
 
         } catch (error) {
 
