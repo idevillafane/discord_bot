@@ -2,6 +2,7 @@ import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 import path from 'path'
 import fs from 'fs'
+import { discordReply } from './utils/discordReply.js'
 dotenv.config()
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -36,22 +37,32 @@ for (const file of commandFiles) {
 }
 
 client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-    const command = interaction.client.commands.get(interaction.commandName);
-    if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`);
+    if (interaction.isChatInputCommand()) {
+        const command = interaction.client.commands.get(interaction.commandName);
+        if (!command) {
+            console.error(`No command matching ${interaction.commandName} was found.`);
+            return;
+        }
+        try {
+            await command.execute(interaction);
+        }
+        catch (error) {
+            console.error(error);
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({ content: '¡Hubo un error durante la ejecución de este comando!', ephemeral: true });
+            }
+            else {
+                await interaction.reply({ content: '¡Hubo un error durante la ejecución de este comando!', ephemeral: true });
+            }
+        }
+    } else if (interaction.isModalSubmit()) {
+
+        console.log('Es el que la causa')
+
+       // await interaction.client.execute();
+
+        await discordReply(interaction, 'Información recibida', []);
+    } else {
         return;
-    }
-    try {
-        await command.execute(interaction);
-    }
-    catch (error) {
-        console.error(error);
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-        }
-        else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-        }
     }
 });

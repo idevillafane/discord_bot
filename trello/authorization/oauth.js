@@ -1,11 +1,11 @@
-import { setRedisData } from "./setRedisData.js";
-import { OAuth } from 'oauth'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { redisHGetAllTrelloAccess, redisHSetTrelloAccess } from '../../redis_db/redis.js';
+import { OAuth } from 'oauth'
 import express from 'express'
 import url from 'url'
 import dotenv from 'dotenv'
 
-export async function setTrelloToken(interaction) {
+export async function setToken(interaction) {
 
     dotenv.config()
 
@@ -50,7 +50,9 @@ export async function setTrelloToken(interaction) {
 
         oauth.getOAuthAccessToken(token, tokenSecretCache, verifier, async function(error, accessToken, accessTokenSecret, results) {
 
-            await setRedisData('trello-access-token', interaction, { id: accessToken, nombre: interaction.user.username} )
+            await redisHSetTrelloAccess(interaction, { id: accessToken, nombre: interaction.user.username})
+
+            // await redis.hSetData('trello-access-token', interaction, { id: accessToken, nombre: interaction.user.username} ) // 
 
             res.send('<h1> Listo. Ya podes volver a Discord. </h1>')
             
@@ -72,4 +74,22 @@ export async function setTrelloToken(interaction) {
         );   
     console.log('vemos')
     await interaction.reply({ content: 'Necesitamos algunos permisos. Por favor, autorizá a Mirtha a acceder a Trello', components: [row], ephemeral: true });
+}
+
+export async function getToken(interaction) {
+
+    dotenv.config();
+
+    const trelloAccess = await redisHGetAllTrelloAccess(interaction)
+
+    // const trelloToken = await redis.hGetAllData('trello-access-token', interaction); // 
+
+	if (!trelloAccess) { 
+
+        await setToken(interaction);
+    
+    } else {
+
+        return `key=${process.env.TRELLO_API_KEY}&token=${trelloAccess.id}`;
+    }
 }
