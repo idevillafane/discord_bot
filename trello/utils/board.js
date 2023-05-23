@@ -1,15 +1,37 @@
 import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
-import { getTrelloToken } from "./getTrelloToken.js";
-import { setRedisData } from "./setRedisData.js";
-import { setTrelloToken } from "./setTrelloToken.js";
+import * as redis from '../../redis_db/redis.js';
+import { getToken, setToken } from '../authorization/oauth.js';
+
+
+export async function getTablero(interaction) {
+
+    const trelloToken = await getToken(interaction);
+
+    if (trelloToken) {
+
+        const tablero = await redis.redisHGetAllTableroDefault(interaction)
+
+        // const tablero = await redis.hGetAllData('tablero', interaction) // 
+
+        if (!tablero) {
+
+            await setTablero(interaction)
+
+        } else {
+
+            return tablero;
+
+        }
+    }
+}
 
 export async function setTablero(interaction) {
 
-    const trelloToken = await getTrelloToken(interaction);
+    const trelloToken = await getToken(interaction);
 
     if (!trelloToken) {
 
-        await setTrelloToken(interaction);
+        await setToken(interaction);
 
     } else {
         
@@ -30,7 +52,9 @@ export async function setTablero(interaction) {
                 id: confirmation.values[0]
             }
 
-            await setRedisData('tablero', interaction, { nombre: tablero.nombre, id: tablero.id });
+            await redis.redisHSetTableroDefault(interaction, { nombre: tablero.nombre, id: tablero.id } )
+
+            // await redis.hSetAll('tablero', interaction, { nombre: tablero.nombre, id: tablero.id }); // 
 
             await interaction.editReply({ content: `Elegiste el tablero "${trelloData.find(objeto => objeto.data.value === confirmation.values[0])?.data.label}"`, components: [], ephemeral: true });
 
