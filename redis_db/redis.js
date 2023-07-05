@@ -1,63 +1,10 @@
-import redis from 'redis';
+import { redisClient } from "../index.js"
 
-const client = redis.createClient();
+const client = createClient();
 
-client.on('connect', function() {
-  //console.log('Conectado a Redis');
-});
+client.on('error', err => console.log('Redis Client Error', err));
 
-client.on('end', function() {
-  //console.log('Desconectado de Redis')
-});
-
-function hGetAllData(label, discordInteraction) {
-  return new Promise((resolve, reject) => {
-    client.hGetAll(`${label}:${discordInteraction.user.id}`, function (err, redisData) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(redisData);
-      }
-    });
-  });
-}
-
-function hSetData(label, discordInteraction, data) {
-  return new Promise((resolve, reject) => {
-    client.hSet(`${label}:${discordInteraction.user.id}`, data, function (err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
-
-export function redisHGetAllListaDefault(discordInteraction) {
-  return hGetAllData('lista-default', discordInteraction);
-}
-
-export function redisHGetAllTableroDefault(discordInteraction) {
-  return hGetAllData('tablero-default', discordInteraction);
-}
-
-export function redisHGetAllTrelloAccess(discordInteraction) {
-  return hGetAllData('trello-access', discordInteraction);
-}
-
-export function redisHSetListaDefault(discordInteraction, data) {
-  return hSetData('lista-default', discordInteraction, data);
-}
-
-export function redisHSetTableroDefault(discordInteraction, data) {
-  return hSetData('tablero-default', discordInteraction, data);
-}
-
-export function redisHSetTrelloAccess(discordInteraction, data) {
-  return hSetData('trello-access', discordInteraction, data);
-}
-
+await client.connect();
 
 /*
 
@@ -68,6 +15,36 @@ client.on('connect', function() {
 client.on('end', function() {
   //console.log('Desconectado de Redis')
 })
+
+*/
+
+async function hSetData(label, discordInteraction, data) {
+
+  await client.hSet(`${label}:${discordInteraction.user.id}`, data);
+
+}
+
+async function hGetAllData(label, discordInteraction) {
+
+  const redisData = await client.hGetAll(`${label}:${discordInteraction.user.id}`);
+
+      if (Object.keys(redisData) < 2) {
+
+         // console.log('dio null')
+
+          return null;
+
+      } else {
+
+          return redisData;
+
+      }
+
+}
+
+
+
+/*
 
 async function hGetAllData(label, discordInteraction) {
 
@@ -109,6 +86,8 @@ async function hSetData(label, discordInteraction, data) {
 
 }
 
+*/
+
 
 export async function redisHGetAllListaDefault(discordInteraction) {
 
@@ -146,11 +125,4 @@ export async function redisHSetTrelloAccess(discordInteraction, data) {
 
 }
 
-
-
-
-
-
 // export default client;
-
-*/
