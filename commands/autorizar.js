@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from 'discord.js';
-import TrelloNodeApi from 'trello-node-api';
+//import TrelloNodeApi from 'trello-node-api';
 import dotenv from 'dotenv'
 import { setToken } from '../trello/authorization/oauth.js';
 dotenv.config()
-const trello = new TrelloNodeApi;
+// const trello = new TrelloNodeApi;
 
 export default {
 
