@@ -2,12 +2,12 @@ import redis from 'redis';
 
 const client = redis.createClient();
 
-client.on('connect', function () {
-  // console.log('Conectado a Redis');
+client.on('connect', function() {
+  //console.log('Conectado a Redis');
 });
 
-client.on('end', function () {
-  // console.log('Desconectado de Redis');
+client.on('end', function() {
+  //console.log('Desconectado de Redis')
 });
 
 function hGetAllData(label, discordInteraction) {
@@ -15,8 +15,6 @@ function hGetAllData(label, discordInteraction) {
     client.hGetAll(`${label}:${discordInteraction.user.id}`, function (err, redisData) {
       if (err) {
         reject(err);
-      } else if (Object.keys(redisData).length < 2) {
-        resolve(null);
       } else {
         resolve(redisData);
       }
@@ -26,69 +24,40 @@ function hGetAllData(label, discordInteraction) {
 
 function hSetData(label, discordInteraction, data) {
   return new Promise((resolve, reject) => {
-    client.hSet(`${label}:${discordInteraction.user.id}`, data, function (err, result) {
+    client.hSet(`${label}:${discordInteraction.user.id}`, data, function (err) {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        resolve();
       }
     });
   });
 }
 
-export async function redisHGetAllListaDefault(discordInteraction) {
-  try {
-    return await hGetAllData('lista-default', discordInteraction);
-  } catch (error) {
-    // TODO: manejo de errores
-    throw error;
-  }
+export function redisHGetAllListaDefault(discordInteraction) {
+  return hGetAllData('lista-default', discordInteraction);
 }
 
-export async function redisHGetAllTableroDefault(discordInteraction) {
-  try {
-    return await hGetAllData('tablero-default', discordInteraction);
-  } catch (error) {
-    // TODO: manejo de errores
-    throw error;
-  }
+export function redisHGetAllTableroDefault(discordInteraction) {
+  return hGetAllData('tablero-default', discordInteraction);
 }
 
-export async function redisHGetAllTrelloAccess(discordInteraction) {
-  try {
-    return await hGetAllData('trello-access', discordInteraction);
-  } catch (error) {
-    // TODO: manejo de errores
-    throw error;
-  }
+export function redisHGetAllTrelloAccess(discordInteraction) {
+  return hGetAllData('trello-access', discordInteraction);
 }
 
-export async function redisHSetListaDefault(discordInteraction, data) {
-  try {
-    await hSetData('lista-default', discordInteraction, data);
-  } catch (error) {
-    // TODO: manejo de errores
-    throw error;
-  }
+export function redisHSetListaDefault(discordInteraction, data) {
+  return hSetData('lista-default', discordInteraction, data);
 }
 
-export async function redisHSetTableroDefault(discordInteraction, data) {
-  try {
-    await hSetData('tablero-default', discordInteraction, data);
-  } catch (error) {
-    // TODO: manejo de errores
-    throw error;
-  }
+export function redisHSetTableroDefault(discordInteraction, data) {
+  return hSetData('tablero-default', discordInteraction, data);
 }
 
-export async function redisHSetTrelloAccess(discordInteraction, data) {
-  try {
-    await hSetData('trello-access', discordInteraction, data);
-  } catch (error) {
-    // Maneja el error aquí o lánzalo para que lo manejen en otro lugar
-    throw error;
-  }
+export function redisHSetTrelloAccess(discordInteraction, data) {
+  return hSetData('trello-access', discordInteraction, data);
 }
+
 
 /*
 
