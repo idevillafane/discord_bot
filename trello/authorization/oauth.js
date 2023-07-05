@@ -22,8 +22,9 @@ export async function setToken(interaction) {
 
     const key = process.env.TRELLO_API_KEY;
     const secret = process.env.TRELLO_OAUTH_SECRET;
+    const host = proces.env.HOST;
 
-    const loginCallback = 'http://localhost:8080/callback';
+    const loginCallback = `http://${host}:8080/callback`;
 
     const oauth = new OAuth(requestURL, accessURL, key, secret, '1.0A', loginCallback, 'HMAC-SHA1');
 
@@ -69,7 +70,7 @@ export async function setToken(interaction) {
         .addComponents(
             new ButtonBuilder()
                 .setLabel('Accedé a Trello')
-                .setURL('http://localhost:8080/login')
+                .setURL(`http://${host}:8080/login`)
                 .setStyle(ButtonStyle.Link)
         );   
     console.log('vemos')
