@@ -12,7 +12,7 @@ client.on('end', function () {
 
 function hGetAllData(label, discordInteraction) {
   return new Promise((resolve, reject) => {
-    client.hgetall(`${label}:${discordInteraction.user.id}`, function (err, redisData) {
+    client.hGetAll(`${label}:${discordInteraction.user.id}`, function (err, redisData) {
       if (err) {
         reject(err);
       } else if (Object.keys(redisData).length < 2) {
@@ -26,7 +26,7 @@ function hGetAllData(label, discordInteraction) {
 
 function hSetData(label, discordInteraction, data) {
   return new Promise((resolve, reject) => {
-    client.hset(`${label}:${discordInteraction.user.id}`, data, function (err, result) {
+    client.hSet(`${label}:${discordInteraction.user.id}`, data, function (err, result) {
       if (err) {
         reject(err);
       } else {
