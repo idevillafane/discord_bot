@@ -22,7 +22,7 @@ export async function setToken(interaction) {
 
     const key = process.env.TRELLO_API_KEY;
     const secret = process.env.TRELLO_OAUTH_SECRET;
-    const host = proces.env.HOST;
+    const host = process.env.HOST;
 
     const loginCallback = `http://${host}:8080/callback`;
 
