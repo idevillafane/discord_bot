@@ -1,4 +1,4 @@
-import { redisClient } from "../index.js"
+import { client } from 'redis'
 
 const client = createClient();
 
