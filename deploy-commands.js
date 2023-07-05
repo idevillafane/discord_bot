@@ -6,6 +6,10 @@ dotenv.config()
 
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
+
+
+
+
 const __dirname = path.dirname(new URL(import.meta.url).pathname); // Obtener la ruta del directorio actual
 
 const commandsPath = path.join(__dirname, 'commands'); // Obtener la ruta completa de la carpeta 'commands'

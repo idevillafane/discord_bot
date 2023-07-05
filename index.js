@@ -17,6 +17,9 @@ client.once(Events.ClientReady, c => {
 
 client.login(process.env.DISCORD_TOKEN);
 
+//const __dirname = fs.realpathSync(process.cwd());
+
+
 const __dirname = path.dirname(new URL(import.meta.url).pathname); // Obtener la ruta del directorio actual
 
 const commandsPath = path.join(__dirname, 'commands'); // Obtener la ruta completa de la carpeta 'commands'
