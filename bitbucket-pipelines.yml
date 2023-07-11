@@ -1,0 +1,69 @@
+clone:
+    depth: full
+
+definitions:
+
+    steps:
+        - step: &build-step
+              name: SonarQube analysis
+              script:
+                  - pipe: sonarsource/sonarqube-scan:1.0.0
+                    variables:
+                        SONAR_HOST_URL: ${SONAR_HOST_URL} # Get the value from the repository/workspace variable.
+                        SONAR_TOKEN: ${SONAR_TOKEN} # Get the value from the repository/workspace variable. You shouldn't set secret in clear text here.
+        - step: &Running-Build-verify-SonarQube-analysis
+              runs-on:
+                  - 'experta'
+              name: 'Running-Build-verify-SonarQube-analysis'
+              image: node:lts-alpine
+              caches:
+                  - node
+                  #- ~/.sonar
+              script:
+                  - npm ci
+                  - npm run coverage
+                  - npm run build-test
+                  
+              artifacts:
+                  - build/**
+
+        - step: &Deploy-Runner
+              name: 'SCP & SSH Runner'
+              runs-on:
+                  - 'experta'
+              image: eeacms/scp-server
+              script:
+                  - mkdir -p ~/.ssh/
+                  - ssh-keyscan -t rsa ${HOST} > my_known_hosts
+                  - cat my_known_hosts >> ~/.ssh/known_hosts
+                  - (umask  077 ; echo $SSH_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa)
+                  # Apply env vars
+                  - ssh $SSH_USER@${HOST} envsubst < env.tmp.template | tee .env
+                  - ssh $SSH_USER@${HOST} "mkdir -p /docker/servicios/${SERVICIO}"
+                  - scp -i ~/.ssh/id_rsa -r ./src ./public ./* $SSH_USER@${HOST}:/docker/servicios/${SERVICIO}/.
+                  - ssh -i ~/.ssh/id_rsa -T $SSH_USER@${HOST} "orquestador-2.bash --servicio ${SERVICIO} --sitio /${DIRECTORIO} --imagen ${IMAGEN}"
+
+pipelines:
+    branches:
+        test:
+            - step:
+                  <<: *Running-Build-verify-SonarQube-analysis
+            - step:
+                  deployment: test
+                  <<: *Deploy-Runner
+
+        dev:
+            - step:
+                  <<: *Running-Build-verify-SonarQube-analysis
+            - step:
+                  deployment: dev
+                  <<: *Deploy-Runner
+
+        prod:
+            - step:
+                 <<: *build-step
+            - step:
+                 <<: *Running-Build-verify-SonarQube-analysis
+            - step:
+                  deployment: prod
+                  <<: *Deploy-Runner
