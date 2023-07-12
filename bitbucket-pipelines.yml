@@ -21,7 +21,7 @@ clone:
                   - npm install
                   - npm ci
                   #- npm run coverage
-                  - npm run build
+                  #- npm run build
                   - node index.js
               services:
                   - redis
