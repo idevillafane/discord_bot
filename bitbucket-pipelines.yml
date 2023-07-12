@@ -19,10 +19,10 @@ clone:
                   #- ~/.sonar
               script:
                   - npm install
-                  - node index.js
                   - npm ci
                   #- npm run coverage
                   - npm run build
+                  - node index.js
               services:
                   - redis
                   
