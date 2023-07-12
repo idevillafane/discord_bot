@@ -24,7 +24,7 @@ definitions:
                   - node index.js
                   - npm ci
                   #- npm run coverage
-                  #- npm run build
+                  - npm run build
                   
               artifacts:
                   - build/**
