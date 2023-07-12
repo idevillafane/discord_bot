@@ -1,8 +1,6 @@
 clone:
     depth: full
 
-definitions:
-
     steps:
         - step: &build-step
               name: SonarQube analysis
@@ -25,6 +23,8 @@ definitions:
                   - npm ci
                   #- npm run coverage
                   - npm run build
+              services:
+                  - redis
                   
               artifacts:
                   - build/**
@@ -44,6 +44,11 @@ definitions:
                   - ssh $SSH_USER@${HOST} "mkdir -p /docker/servicios/${SERVICIO}"
                   - scp -i ~/.ssh/id_rsa -r ./src ./public ./* $SSH_USER@${HOST}:/docker/servicios/${SERVICIO}/.
                   - ssh -i ~/.ssh/id_rsa -T $SSH_USER@${HOST} "orquestador-2.bash --servicio ${SERVICIO} --sitio /${DIRECTORIO} --imagen ${IMAGEN}"
+
+definitions:
+  services:
+    redis:
+      image: redis
 
 pipelines:
     branches:
