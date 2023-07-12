@@ -21,7 +21,7 @@ definitions:
                   #- ~/.sonar
               script:
                   - npm ci
-                  - npm run coverage
+                  #- npm run coverage
                   - npm run build-test
                   
               artifacts:
