@@ -42,7 +42,7 @@ clone:
                   # Apply env vars
                   - ssh $SSH_USER@${HOST} envsubst < env.tmp.template | tee .env
                   - ssh $SSH_USER@${HOST} "mkdir -p /docker/servicios/${SERVICIO}"
-                  - scp -i ~/.ssh/id_rsa -r ./src ./public ./* $SSH_USER@${HOST}:/docker/servicios/${SERVICIO}/.
+                  - scp -i ~/.ssh/id_rsa -r ./* $SSH_USER@${HOST}:/docker/servicios/${SERVICIO}/.
                   - ssh -i ~/.ssh/id_rsa -T $SSH_USER@${HOST} "orquestador-2.bash --servicio ${SERVICIO} --sitio /${DIRECTORIO} --imagen ${IMAGEN}"
 
 definitions:
