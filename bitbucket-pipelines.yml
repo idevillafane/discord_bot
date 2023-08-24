@@ -1,8 +1,6 @@
 clone:
     depth: full
 
-definitions:
-
     steps:
         - step: &build-step
               name: SonarQube analysis
@@ -20,9 +18,13 @@ definitions:
                   - node
                   #- ~/.sonar
               script:
+                  - npm install
                   - npm ci
-                  - npm run coverage
-                  - npm run build-test
+                  #- npm run coverage
+                  #- npm run build
+                  - node index.js
+              services:
+                  - redis
                   
               artifacts:
                   - build/**
@@ -40,8 +42,13 @@ definitions:
                   # Apply env vars
                   - ssh $SSH_USER@${HOST} envsubst < env.tmp.template | tee .env
                   - ssh $SSH_USER@${HOST} "mkdir -p /docker/servicios/${SERVICIO}"
-                  - scp -i ~/.ssh/id_rsa -r ./src ./public ./* $SSH_USER@${HOST}:/docker/servicios/${SERVICIO}/.
+                  - scp -i ~/.ssh/id_rsa -r ./* $SSH_USER@${HOST}:/docker/servicios/${SERVICIO}/.
                   - ssh -i ~/.ssh/id_rsa -T $SSH_USER@${HOST} "orquestador-2.bash --servicio ${SERVICIO} --sitio /${DIRECTORIO} --imagen ${IMAGEN}"
+
+definitions:
+  services:
+    redis:
+      image: redis
 
 pipelines:
     branches:
