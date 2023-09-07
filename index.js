@@ -15,9 +15,9 @@ client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login("MTAyNDcxMzM0OTIzMTAxODEwNQ.GieRFv.zPKh-7YJxJvGl3ctt280IqxgUjN_RtyZ_1Jgpg");
 
-//const __dirname = fs.realpathSync(process.cwd());
+// client.login(process.env.DISCORD_TOKEN);
 
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname); // Obtener la ruta del directorio actual
