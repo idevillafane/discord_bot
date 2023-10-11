@@ -73,8 +73,9 @@ export async function setToken(interaction) {
                 .setURL(`http://${host}:8080/login`)
                 .setStyle(ButtonStyle.Link)
         );   
-    console.log('vemos')
-    await interaction.reply({ content: 'Necesitamos algunos permisos. Por favor, autorizá a Mirtha a acceder a Trello', components: [row], ephemeral: true });
+    console.log('Se crea petición a Trello. Esperando acción del usuario...')
+    await interaction.reply({ content: 'Necesitamos algunos permisos. Por favor, autorizá a Mirtha a acceder a Trello', components: [row], ephemeral: true })
+    .then(console.log('Respuesta existosa por parte de OAuth'));
 }
 
 export async function getToken(interaction) {
