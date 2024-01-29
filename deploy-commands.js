@@ -26,7 +26,8 @@ const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('
 
 
 // Construct and prepare an instance of the REST module
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+//const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+const rest = new REST({ version: '10' }).setToken("MTAyNDcxMzM0OTIzMTAxODEwNQ.GIBCjn.UmZJejb73wmlYIhS5NPJBpMvfvTzQ_Ob7FaIyo");
 
 // and deploy your commands!
 (async () => {
@@ -35,7 +36,9 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		const data = await rest.put(
-			Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, process.env.DISCORD_GUILD_ID),
+			//Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, process.env.DISCORD_GUILD_ID),
+			//{ body: commands },
+			Routes.applicationGuildCommands("1024713349231018105", "1006242203674365982"),
 			{ body: commands },
 		);
 
