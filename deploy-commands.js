@@ -7,9 +7,6 @@ dotenv.config()
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
 
-
-
-
 const __dirname = path.dirname(new URL(import.meta.url).pathname); // Obtener la ruta del directorio actual
 
 const commandsPath = path.join(__dirname, 'commands'); // Obtener la ruta completa de la carpeta 'commands'
@@ -18,8 +15,6 @@ const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('
 	// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-
-
 		const { default: command } = await import(filePath);
 		commands.push(command.data.toJSON());
 	}

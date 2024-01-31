@@ -5,6 +5,11 @@ import express from 'express'
 import url from 'url'
 import dotenv from 'dotenv'
 
+/**
+ * ESTA CLASE SIRVE PARA REALIZAR LA AUTENTICACIÓN DEL ACCESO DEL USUARIO DE DISCORD A TRELLO MEDIANTE OAUTH
+ * ALMACENA LOS VALORES DE LOS TOKENS EN UNA BASE DE DATOS DE REDIS
+ *  */
+
 export async function setToken(interaction) {
 
     dotenv.config()
@@ -22,7 +27,7 @@ export async function setToken(interaction) {
 
     const key = process.env.TRELLO_API_KEY;
     const secret = process.env.TRELLO_OAUTH_SECRET;
-    const host = 'cluster-test' // process.env.HOST;
+    const host = process.env.HOST;
 
     const loginCallback = `http://${host}:8080/callback`;
 
@@ -33,6 +38,9 @@ export async function setToken(interaction) {
     const login = function(request, response) {
 
         oauth.getOAuthRequestToken( async function(error, token, tokenSecret, results) {
+
+
+           // console.log('aaaaa' + token) oauth_token=${token}&
 
             tokenSecretCache = tokenSecret;
 

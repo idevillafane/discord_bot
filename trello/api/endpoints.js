@@ -2,7 +2,16 @@ import { getToken } from "../authorization/oauth.js"
 
 const __baseURL = 'https://api.trello.com/1/'
 
-
+/**
+ * ESTA CLASE ES LA INTERFAZ POR MEDIO DE LA CUAL SE ESTABLECEN LAS CONEXIONES DESDE DISCORD HACIA TRELLO.
+ * DESCRIPCIÓN DE LAS FUNCIONES:
+ * - oauthGET():
+ * - oauthPOST():
+ * - getBoards(): Trae a Discord todos los tableros del usuario que hace la petición.
+ * - getLists(): Trae a Discord todas las listas de un tablero determinado.
+ * - getMembersOfABoard(): Trae a Discord todos los miembros de un tablero determinado.
+ * - postCardToListOnABoard(): Envia una tarjeta con contenido a una lista determinada (en un tablero determinado). 
+ *  */
 
 
 async function oauthGET(discordInteraction, url) {
