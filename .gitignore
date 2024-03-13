@@ -41,5 +41,5 @@ Thumbs.db
 *.mov
 *.wmv
 
-# Borro base de Redis
+# Redis components
 dump.rdb
