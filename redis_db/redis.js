@@ -13,7 +13,7 @@ async function hSetData(label, discordInteraction, data) {
   try {
     await client.hset(`${label}:${discordInteraction.user.id}`, data);
   } catch (error) {
-    console.error('Error al establecer el valor en Redis. ¿Está la instancia de Redis levantada?', error);
+    console.error('Error al establecer el valor en Redis. ¿Está la instancia de Redis levantada?\n', error);
   }
 }
 
