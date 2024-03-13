@@ -43,3 +43,8 @@ Thumbs.db
 
 # Redis components
 dump.rdb
+
+# Another components
+.appPassword.txt
+.secrets
+
