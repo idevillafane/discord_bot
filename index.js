@@ -15,10 +15,6 @@ client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-// client.login("MTAyNDcxMzM0OTIzMTAxODEwNQ.GieRFv.zPKh-7YJxJvGl3ctt280IqxgUjN_RtyZ_1Jgpg");
-
-
-
 client.login(process.env.DISCORD_TOKEN);
 
 

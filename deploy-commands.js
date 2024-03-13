@@ -21,7 +21,7 @@ const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('
 
 
 // Construct and prepare an instance of the REST module
-//const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+// const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 const rest = new REST({ version: '10' }).setToken("MTAyNDcxMzM0OTIzMTAxODEwNQ.GIBCjn.UmZJejb73wmlYIhS5NPJBpMvfvTzQ_Ob7FaIyo");
 
 // and deploy your commands!
