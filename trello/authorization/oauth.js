@@ -15,7 +15,7 @@ export async function setToken(interaction) {
     dotenv.config()
 
     const app = new express();
-    app.listen(8080);
+    app.listen(process.env.DISCORDJS_PORT);
     app.use(express.static('public'));
 
     const requestURL = 'https://trello.com/1/OAuthGetRequestToken';
@@ -27,7 +27,7 @@ export async function setToken(interaction) {
 
     const key = process.env.TRELLO_API_KEY;
     const secret = process.env.TRELLO_OAUTH_SECRET;
-    const host = process.env.HOST;
+    const host = process.env.DISCORDJS_HOST;
 
     const loginCallback = `http://${host}:8080/callback`;
 

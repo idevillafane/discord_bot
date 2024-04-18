@@ -2,8 +2,8 @@ import { createClient } from 'redis';
 
 // Configuración para la base de datos local de Redis (localhost:6379)
 const client = createClient({
-  host: 'localhost', // Cambia a la dirección IP o nombre de host de tu servidor si no estás ejecutando Redis localmente.
-  port: 6379,
+  host: process.env.REDIS_HOST, // Cambia a la dirección IP o nombre de host de tu servidor si no estás ejecutando Redis localmente.
+  port: process.env.REDIS_PORT,
 });
 
 client.on('error', err => console.log('Redis Client Error', err));
@@ -11,7 +11,7 @@ client.on('error', err => console.log('Redis Client Error', err));
 // Función para realizar operaciones de conjunto de datos en Redis
 async function hSetData(label, discordInteraction, data) {
   try {
-    await client.hset(`${label}:${discordInteraction.user.id}`, data);
+    await client.hSet(`${label}:${discordInteraction.user.id}`, data);
   } catch (error) {
     console.error('Error al establecer el valor en Redis:', error);
   }

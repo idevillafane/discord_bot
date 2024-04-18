@@ -43,3 +43,4 @@ Thumbs.db
 
 # Borro base de Redis
 dump.rdb
+.env

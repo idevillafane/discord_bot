@@ -9,5 +9,9 @@ RUN npm install
 
 COPY . /usr/src/discordbot
 
+EXPOSE 8080
+EXPOSE 6379
+EXPOSE 8001
+
 # Start the bot.
 CMD ["node", "index.js"]
